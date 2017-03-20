@@ -11,6 +11,9 @@
 # improved and extended version of JonA1961's MAX7219array
 # ( https://github.com/JonA1961/MAX7219array )
 # ---------------------------------------------------------
+# corrected for arbitrary led Matrix array location 
+# ( https://github.com/agnunez/MAX7219array ) A.Nunez 2017
+# ---------------------------------------------------------
 # Controls a linear array of MAX7219 LED Display Drivers,
 #   each of which is driving an 8x8 LED matrix.
 #
@@ -49,6 +52,8 @@
 #	2  5  8  11
 #	1  4  7  10
 #	0  3  6  9	
+#   (*)If your disposition is different, fill pos[] array below with your left->right top->button order
+#   Example for above:  pos = [2,5,8,11,1,4,7,10,0,3,6,9]
 # - gfx_ (graphics-based) functions use an x,y coordinate system
 #   to address individual LEDs:
 #     x=0 (left-hand column) to x=8*MATRIX_WIDTH-1 (right-hand column)
@@ -110,8 +115,9 @@ from random import randrange
 from multilineMAX7219_fonts import CP437_FONT, SINCLAIRS_FONT, LCD_FONT, TINY_FONT
 
 # IMPORTANT: User must specify the number of MAX7219 matrices here:
-MATRIX_WIDTH  = 3
-MATRIX_HEIGHT = 3
+MATRIX_WIDTH  = 4
+MATRIX_HEIGHT = 4
+pos=[12,8,4,0,13,9,5,1,14,10,6,2,15,11,7,3]
 
 # Optional: It is also possible to change the default font for all the library functions:
 DEFAULT_FONT = CP437_FONT          # Note: some fonts only contain characters in chr(32)-chr(126) range
@@ -182,7 +188,7 @@ def send_bytes(datalist):
 def send_matrix_reg_byte(matrix, register, data):
     # Send one byte of data to one register in just one MAX7219 without affecting others
     if matrix in MATRICES:
-        padded_data = NO_OP * (NUM_MATRICES - 1 - matrix) + [register, data] + NO_OP * matrix
+        padded_data = NO_OP * (NUM_MATRICES - 1 - pos[matrix]) + [register, data] + NO_OP * pos[matrix]
         send_bytes(padded_data)
 
 def send_all_reg_byte(register, data):
@@ -194,7 +200,7 @@ def clear(matrix_list):
     for matrix in matrix_list:
         if matrix in MATRICES:
             for col in range(8):
-                send_matrix_reg_byte(matrix, col+1, 0)
+                send_matrix_reg_byte(pos[matrix], col+1, 0)
 
 def clear_all():
     # Clear all of the connected MAX7219 matrices
@@ -251,20 +257,23 @@ def static_message(message, direction=DIR_RD, delay=0, font=DEFAULT_FONT):
     # Send a stationary text message to the array of MAX7219 matrices
     # Message will be truncated from the right to fit the array
 	# Message can be send in this directions:	DIR_RD	DIR_RU	DIR_D	DIR_U
-	# (e.g. message='012345678')				0 1 2 	6 7 8	0 3 6	2 5 8
-	#											3 4 5	3 4 5	1 4 7	1 4 7
-	#											6 7 8	0 1 2	2 5 8	0 3 6
+	# (e.g. message='012345678')			0 1 2 	6 7 8	0 3 6	2 5 8
+	#						3 4 5	3 4 5	1 4 7	1 4 7
+	#						6 7 8	0 1 2	2 5 8	0 3 6
 	# delay = x seconds can delay the appearance of the following character
 	message = trim(message)
 	delay = delay
 	idx = 0
 	if direction == DIR_RD or direction == DIR_R:
-		for l_row in reversed(range(MATRIX_HEIGHT)):
-			for l_col in range(MATRIX_WIDTH):
-				matrix = l_row + l_col*MATRIX_HEIGHT
-				send_matrix_letter( matrix, ord(message[idx] ), font)
-				idx += 1
-				time.sleep(delay)
+	  for c in message:
+	    row = idx%MATRIX_WIDTH
+            col = idx//MATRIX_WIDTH
+ 	    print "c:%s row:%s col:%s" % (c,row,col)
+	    matrix = row + col*MATRIX_WIDTH
+	    send_matrix_letter( matrix, ord(c), font)
+            idx+=1
+	    time.sleep(delay)
+
 	elif direction == DIR_RU:
 		for l_row in range(MATRIX_HEIGHT):
 			for l_col in range(MATRIX_WIDTH):
