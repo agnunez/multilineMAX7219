@@ -38,11 +38,13 @@ from multilineMAX7219 import DISSOLVE, GFX_ON, GFX_OFF, GFX_INVERT
 
 # Initialise the library and the MAX7219/8x8LED arrays
 LEDMatrix.init()
+LEDMatrix.brightness(3)
 
 try:
 	# Display a stationary message
-	LEDMatrix.static_message("Welcome!")
-	time.sleep(2)
+	#LEDMatrix.static_message("Welcome!")
+	LEDMatrix.static_message("UT      10:44:45ST      17:55:32")
+	time.sleep(10)
 	LEDMatrix.clear_all()
 
 	# Cycle through the range of brightness levels - up then down
@@ -59,31 +61,31 @@ try:
 	LEDMatrix.brightness(3)
 
 	# Display all characters from the font individually
-	for char in range(0x100):
-		LEDMatrix.send_matrix_letter((char%9), char)
+	for char in range(64):
+		LEDMatrix.send_matrix_letter((char%32), char)
 		time.sleep(0.22)
 	time.sleep(0.5)
 	LEDMatrix.clear_all()
 	time.sleep(1)
 
 	# Scroll characters in each of 4 directions
-	for matrix in range(9):
+	for matrix in range(32):
 		LEDMatrix.send_matrix_letter(matrix, 65 + matrix)
 	time.sleep(0.5)
 	letter_offset=0
 	for dir in (DIR_L, DIR_R):
 		for stage in range(8):
-			for matrix in range(9):
+			for matrix in range(32):
 				LEDMatrix.send_matrix_shifted_letter(matrix, 65 + matrix + 3*letter_offset, 68 + matrix - 3*letter_offset, stage, dir)
 			time.sleep(0.1)
 		letter_offset = 1 - letter_offset
 	for dir in (DIR_D, DIR_U):
 		for stage in range(8):
-			for matrix in range(9):
+			for matrix in range(32):
 				LEDMatrix.send_matrix_shifted_letter(matrix, 65 + matrix + letter_offset, 66 + matrix - letter_offset, stage, dir)
 			time.sleep(0.1)
 		letter_offset = 1 - letter_offset
-	for matrix in range(9):
+	for matrix in range(32):
 		LEDMatrix.send_matrix_letter(matrix, 65 + matrix)
 	time.sleep(1)
 	LEDMatrix.clear_all()
