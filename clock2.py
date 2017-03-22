@@ -32,7 +32,10 @@ print gtc.lon, gtc.lat
 try:
   while 1:
         ut,lst=utlst()
-	now = "UT      %sST      %s" % (ut, lst)
+        sut="%s" % ut
+        slst="%s" % lst 
+        if len(slst) < 8: slst = "0"+slst
+	now = "UT        %sST        %s" % (sut.replace(":",""), slst.replace(":",""))
         LEDMatrix.static_message(now)
         time.sleep(0.1)
 

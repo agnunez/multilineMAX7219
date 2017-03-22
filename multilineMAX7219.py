@@ -503,7 +503,7 @@ def gfx_letter(char_code, start_x=0, start_y=0, state=GFX_INVERT, font=DEFAULT_F
 					gfx_buffer[l_col + start_x][l_row + start_y] = ~((font[char_code][l_col] & pow(2, 7-l_row))>>(7-l_row))
 				elif state == GFX_INVERT:
 					gfx_buffer[l_col + start_x][l_row + start_y] = ((font[char_code][l_col] & pow(2, 7-l_row))>>(7-l_row)) ^ gfx_buffer[l_col + start_x][l_row + start_y]
-
+'''
 def gfx_sprite_array(sprite, start_x=0, start_y=0, state=GFX_INVERT):
     # Overlay a specified 2d array[x][y] into the graphics buffer, at a specified position
     # The sprite is drawn by setting each affected pixel to either on, off, or the inverse of its previous state
@@ -516,7 +516,23 @@ def gfx_sprite_array(sprite, start_x=0, start_y=0, state=GFX_INVERT):
 				if state == GFX_ON:
 					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row]
 				elif state == GFX_OFF:
-					gfx_buffer[l_col + start_x][l_row + start_y] = ~sprite[l_col][l_row]
+					gfx_buffer[l_col + start_x][l_row + start_y] = -sprite[l_col][l_row]
+				elif state == GFX_INVERT:
+					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row] ^ gfx_buffer[l_col + start_x][l_row + start_y]
+'''
+def gfx_sprite_array(sprite, start_x=0, start_y=0, state=GFX_INVERT):
+    # Overlay a specified 2d array[x][y] into the graphics buffer, at a specified position
+    # The sprite is drawn by setting each affected pixel to either on, off, or the inverse of its previous state
+    # Sprite is an m-pixel (wide) x n-pixel hide array, eg [[0,0,1,0],[1,1,1,1],[0,0,1,0]] for a cross
+	start_x = int(start_x)
+	start_y = int(start_y)
+	for l_col in range(len(sprite[l_col])):
+	        for l_row in range(len(sprite)):
+			if (l_col + start_x) < len(gfx_buffer) and (l_row + start_y) < len(gfx_buffer[l_col + start_x]):
+				if state == GFX_ON:
+					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row]
+				elif state == GFX_OFF:
+					gfx_buffer[l_col + start_x][l_row + start_y] = -sprite[l_col][l_row]
 				elif state == GFX_INVERT:
 					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row] ^ gfx_buffer[l_col + start_x][l_row + start_y]
 
@@ -773,7 +789,7 @@ def gfx_render():
     # This command sends the entire buffer to the matrix array - use it to display the effect of one or more previous gfx_ functions
 	for g_col in range(8):
 		column_data = []
-		for matrix in reversed(range(NUM_MATRICES)):
+		for matrix in range(NUM_MATRICES):
 			val = 0x00
 			for px in range(8):
 				val += gfx_buffer[g_col + (matrix//MATRIX_HEIGHT)*8 ][px+(matrix%MATRIX_HEIGHT)*8] * pow(2,7-px)
