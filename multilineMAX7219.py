@@ -508,33 +508,35 @@ def gfx_sprite_array(sprite, start_x=0, start_y=0, state=GFX_INVERT):
     # Overlay a specified 2d array[x][y] into the graphics buffer, at a specified position
     # The sprite is drawn by setting each affected pixel to either on, off, or the inverse of its previous state
     # Sprite is an m-pixel (wide) x n-pixel hide array, eg [[0,0,1,0],[1,1,1,1],[0,0,1,0]] for a cross
-	start_x = int(start_x)
-	start_y = int(start_y)
-	for l_col in range(len(sprite)):
-		for l_row in range(len(sprite[l_col])):
-			if (l_col + start_x) < len(gfx_buffer) and (l_row + start_y) < len(gfx_buffer[l_col + start_x]):
-				if state == GFX_ON:
-					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row]
-				elif state == GFX_OFF:
-					gfx_buffer[l_col + start_x][l_row + start_y] = -sprite[l_col][l_row]
-				elif state == GFX_INVERT:
-					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row] ^ gfx_buffer[l_col + start_x][l_row + start_y]
+        start_x = int(start_x)
+        start_y = int(start_y)
+        for l_col in range(len(sprite)):
+                for l_row in range(len(sprite[l_col])):
+                        if (l_col + start_x) < len(gfx_buffer) and (l_row + start_y) < len(gfx_buffer[l_col + start_x]):
+                                if state == GFX_ON:
+                                        gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row]
+                                elif state == GFX_OFF:
+                                        gfx_buffer[l_col + start_x][l_row + start_y] = ~sprite[l_col][l_row]
+                                elif state == GFX_INVERT:
+                                        gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row] ^ gfx_buffer[l_col + start_x][l_row + start_y]
+
 '''
 def gfx_sprite_array(sprite, start_x=0, start_y=0, state=GFX_INVERT):
     # Overlay a specified 2d array[x][y] into the graphics buffer, at a specified position
     # The sprite is drawn by setting each affected pixel to either on, off, or the inverse of its previous state
     # Sprite is an m-pixel (wide) x n-pixel hide array, eg [[0,0,1,0],[1,1,1,1],[0,0,1,0]] for a cross
-	start_x = int(start_x)
-	start_y = int(start_y)
-	for l_col in range(len(sprite[l_col])):
-	        for l_row in range(len(sprite)):
-			if (l_col + start_x) < len(gfx_buffer) and (l_row + start_y) < len(gfx_buffer[l_col + start_x]):
-				if state == GFX_ON:
-					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row]
-				elif state == GFX_OFF:
-					gfx_buffer[l_col + start_x][l_row + start_y] = -sprite[l_col][l_row]
-				elif state == GFX_INVERT:
-					gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row] ^ gfx_buffer[l_col + start_x][l_row + start_y]
+        start_x = int(start_x)
+        start_y = int(start_y)
+        for l_col in range(len(sprite)):
+                for l_row in range(len(sprite[l_col])):
+                        if (l_col + start_x) < len(gfx_buffer) and (l_row + start_y) < len(gfx_buffer[l_col + start_x]):
+                                if state == GFX_ON:
+                                        gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row]
+                                elif state == GFX_OFF:
+                                        gfx_buffer[l_col + start_x][l_row + start_y] = ~sprite[l_col][l_row]
+                                elif state == GFX_INVERT:
+                                        gfx_buffer[l_col + start_x][l_row + start_y] = sprite[l_col][l_row] ^ gfx_buffer[l_col + start_x][l_row + start_y]
+
 
 def gfx_scroll_towards(new_graphic=GFX_OFF, repeats=0, speed=3, direction=DIR_L, finish=True):
 	# Scrolls another graphic (2d array, same width and height like gfx_buffer: (8*MATRIX_WIDTH) x (8*MATRIX_HEIGHT) )
