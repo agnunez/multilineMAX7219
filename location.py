@@ -48,7 +48,7 @@ try:
 	LEDMatrix.brightness(0)
 	# Display all characters from the font individually
 	for char in range(NUM_MATRICES):
-		LEDMatrix.send_matrix_letter(char, ord("%0.1X" % char))
+		LEDMatrix.send_matrix_letter(char, ord("%0.1X" % (char%16)))
 		time.sleep(0.22)
 	time.sleep(0.5)
 except:
