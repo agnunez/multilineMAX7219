@@ -8,6 +8,7 @@ from multilineMAX7219 import DIR_L, DIR_R, DIR_U, DIR_D
 from multilineMAX7219 import DIR_LU, DIR_RU, DIR_LD, DIR_RD
 from multilineMAX7219 import DISSOLVE, GFX_ON, GFX_OFF, GFX_INVERT
 import datetime,ephem
+from myfont import f
 
 def utlst():
   gtc = ephem.Observer()
@@ -18,10 +19,18 @@ def utlst():
   ut=p[1]
   return ut,lst[0]
 
+def at(x,y,string,state=GFX_ON):
+  for c in string:
+    LEDMatrix.gfx_sprite_array(f[ord(c)-48],x,y,state)
+    x+=len(f[ord(c)-48][0])
+    if c == ":" : x-=7
+    if c >= "A" : x-=1
+
+
 
 # Initialise the library and the MAX7219/8x8LED arrays
 LEDMatrix.init()
-LEDMatrix.brightness(2)
+LEDMatrix.brightness(5)
 sun, moon = ephem.Sun(), ephem.Moon()
 
 gtc = ephem.Observer()
@@ -32,11 +41,14 @@ print gtc.lon, gtc.lat
 try:
   while 1:
         ut,lst=utlst()
-	now = "UT      %sST      %s" % (ut, lst)
-        LEDMatrix.static_message(now)
+        sut="%s" % ut
+        slst="%s" % lst 
+        if len(slst) < 8: slst = "0"+slst
+        at(0,16,"UT%s" % sut)
+        at(0, 0,"ST%s" % slst)
+        LEDMatrix.gfx_render()
         time.sleep(0.1)
 
 except KeyboardInterrupt:
     # reset array
-    LEDMatrix.scroll_message_horiz(["","Goodbye!",""], 1, 8)
     LEDMatrix.clear_all()

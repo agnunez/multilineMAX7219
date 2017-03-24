@@ -41,5 +41,4 @@ try:
 
 except KeyboardInterrupt:
     # reset array
-    LEDMatrix.scroll_message_horiz(["","Goodbye!",""], 1, 8)
     LEDMatrix.clear_all()
