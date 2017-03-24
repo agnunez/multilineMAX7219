@@ -118,7 +118,6 @@ from multilineMAX7219_fonts import CP437_FONT, SINCLAIRS_FONT, LCD_FONT, TINY_FO
 MATRIX_WIDTH  = 8
 MATRIX_HEIGHT = 4
 pos=[28,24,20,16,12,8,4,0,29,25,21,17,13,9,5,1,30,26,22,18,14,10,6,2,31,27,23,19,15,11,7,3]
-#pos=[12,8,4,0,13,9,5,1,14,10,6,2,15,11,7,3]
 
 # Optional: It is also possible to change the default font for all the library functions:
 #DEFAULT_FONT = CP437_FONT          # Note: some fonts only contain characters in chr(32)-chr(126) range
