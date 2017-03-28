@@ -6,7 +6,7 @@ Drive n x m MAX7219 LED Matrices via SPI in Python from the Raspberry Pi
 You can find an introduction of this library here: http://www.tutorials-raspberrypi.de/allgemein/library-installation-for-multiline-m-x-n-max7219-led-matrices/
 
 NOTE: https://github.com/agnunez/multilineMAX7219
-Upgraded to allow any type of matrix disposition.
+Upgraded to allow any type of matrix disposition. 
  - First run python location.py to realize your specific dispostion order
  - Second, edit multilineMAX7219.py :
      update MATRIX_HEIGHT and MATRIX_WIDTH with your configuration
@@ -24,5 +24,4 @@ in myfont.py. Only numbers and specific letters are implemented. You can add mor
 Have fun!
 Agustin
 agnunez @ github
-anunez@gmail.com
 
